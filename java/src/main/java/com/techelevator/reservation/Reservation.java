@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Reservation {
 
-	int reservation_id;
-	int site_id;
-	String name;
-	Date from_date;
-	Date to_date;
-	Date create_date;
+	private int reservation_id;
+	private int site_id;
+	private String name;
+	private Date from_date;
+	private Date to_date;
+	private Date create_date; 	// when reservation is created by user?
 
 	public int getReservation_id() {
 		return reservation_id;

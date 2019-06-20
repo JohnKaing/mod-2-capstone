@@ -2,13 +2,13 @@ package com.techelevator.site;
 
 public class Site {
 
-	int site_id;
-	int campground_id;
-	int site_number;
-	int max_occupancy;
-	boolean accessible;
-	int max_rv_length;
-	boolean utilities;
+	private int site_id;
+	private int campground_id;
+	private int site_number;
+	private int max_occupancy;
+	private boolean accessible;
+	private int max_rv_length;
+	private boolean utilities;
 
 	public int getSite_id() {
 		return site_id;
