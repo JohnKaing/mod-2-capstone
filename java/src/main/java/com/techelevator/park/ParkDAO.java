@@ -16,4 +16,6 @@ public List<Park> getAllParks();
 
 public void create(Park createPark); 
 
+public List<Park> getParkInfo(Park id);
+
 }

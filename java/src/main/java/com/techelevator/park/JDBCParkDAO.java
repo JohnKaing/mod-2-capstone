@@ -49,6 +49,23 @@ public class JDBCParkDAO implements ParkDAO {
 
 		return allParks;
 	}
+	
+	@Override
+	public List<Park> getParkInfo(Park id) {
+		List<Park> parkInfo = new ArrayList<Park>(); // define result
+
+		String sqlParkInfo = "SELECT * FROM park where park_id = ? ";
+
+		SqlRowSet results = myJdbcTemplate.queryForRowSet(sqlParkInfo, id);
+
+		while (results.next()) {
+			Park thePark = mapRowToPark(results);
+			parkInfo.add(thePark);
+		}
+
+		return parkInfo;
+	}
+
 
 	@Override
 	public void create(Park createPark) {
@@ -71,4 +88,5 @@ public class JDBCParkDAO implements ParkDAO {
 
 	}
 
+	
 }

@@ -54,8 +54,18 @@ public class JDBCCampgroundDAO implements CampgroundDAO {
 
 	@Override
 	public List<Campground> getAllCampground() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Campground> allCampgroundList = new ArrayList<>();
+
+		String sqlAllCampground = "SELECT * FROM campground";
+
+		SqlRowSet results = myJdbcTemplate.queryForRowSet(sqlAllCampground);
+
+		while (results.next()) {
+			Campground theCampground = mapRowToCampground(results);
+			allCampgroundList.add(theCampground);
+		}
+
+		return allCampgroundList;
 	}
 
 	@Override
