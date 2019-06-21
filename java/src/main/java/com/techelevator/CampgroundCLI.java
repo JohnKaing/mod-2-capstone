@@ -12,6 +12,9 @@ import com.techelevator.campground.JDBCCampgroundDAO;
 import com.techelevator.park.JDBCParkDAO;
 import com.techelevator.park.Park;
 import com.techelevator.park.ParkDAO;
+import com.techelevator.reservation.JDBCReservationDAO;
+import com.techelevator.reservation.Reservation;
+import com.techelevator.reservation.ReservationDAO;
 import com.techelevator.site.JDBCSiteDAO;
 import com.techelevator.site.Site;
 import com.techelevator.site.SiteDAO;
@@ -29,13 +32,13 @@ public class CampgroundCLI {
 		dataSource.setPassword("postgres1");
 
 		JDBCParkDAO parkDAO = new JDBCParkDAO(dataSource);
-//		reservationDAO = new JDBCReservationDAO(dataSource);
+		JDBCReservationDAO reservationDAO = new JDBCReservationDAO(dataSource);
 		JDBCCampgroundDAO campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		JDBCSiteDAO siteDAO = new JDBCSiteDAO(dataSource);
 
 		Menu appMenu = new Menu(System.in, System.out); 
 		CampgroundCLI application = new CampgroundCLI(appMenu); 
-		application.run(parkDAO, campgroundDAO, siteDAO); 
+		application.run(parkDAO, campgroundDAO, siteDAO, reservationDAO); 
 	}
 
 	private static final String CAMPGROUND_MENU_OPTION_VIEW_CAMPGROUNDS = "View Campgrounds";
@@ -62,7 +65,7 @@ public class CampgroundCLI {
 //
 //	}
 
-	public void run(ParkDAO parkDAO, CampgroundDAO campgroundDAO, SiteDAO siteDAO) {
+	public void run(ParkDAO parkDAO, CampgroundDAO campgroundDAO, SiteDAO siteDAO, ReservationDAO reservationDAO) {
 		boolean shouldProcess = true; // Loop control variable
 
 		while (shouldProcess) { // Loop until user indicates they want to exit
@@ -107,7 +110,7 @@ public class CampgroundCLI {
 					switch (campChoice) {
 
 					case CAMPGROUND_MENU_OPTION_VIEW_CAMPGROUNDS:
-						viewCampgrounds(campgroundDAO, i + 1, siteDAO);
+						viewCampgrounds(campgroundDAO, i + 1, siteDAO, reservationDAO);
 						break;
 
 					case CAMPGROUND_MENU_OPTION_SEARCH:
@@ -138,7 +141,7 @@ public class CampgroundCLI {
 		return; // End method and return to caller
 	}
 
-	public void viewCampgrounds(CampgroundDAO campgroundDAO, int parkID, SiteDAO siteDAO) {
+	public void viewCampgrounds(CampgroundDAO campgroundDAO, int parkID, SiteDAO siteDAO, ReservationDAO reservationDAO) {
 		System.out.println("\t Name \t\t Open \t Close \t Daily Fee "); // TODO fix formatting
 
 		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
@@ -163,29 +166,53 @@ public class CampgroundCLI {
 //			String campResChoice2 = (String) campgroundMenu.getChoiceFromOptions(campgroundStrings);
 //			System.out.println(campResChoice2);
 			
-			System.out.println("Which campground would you like to select? (enter 0 to cancel) ");
+			System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
 			int userCampground = Integer.parseInt(keyboard.nextLine());
-			System.out.println(userCampground);
-			System.out.println("What is the arrival date? (YYYY-MM-DD)");
+			System.out.print("What is the arrival date? (YYYY-MM-DD): ");
 			String arrivalDate = keyboard.nextLine();
-			System.out.println("What is the departure date? (YYYY-MM-DD)");
+			System.out.print("What is the departure date? (YYYY-MM-DD): ");
 			String departureDate = keyboard.nextLine();
 			
-			List<Site> availableSites = siteDAO.getAvailableSites(1, "2019-05-01", "2019-05-02");
+			System.out.println("Results Matching Your Search Criteria");
+			printHeading("Site No. \t Max Occup. \t Accessible? \t Max RV Length \t Utilities? \t Cost");	// 
+			
+			List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
 			
 			for (int i = 0; i < availableSites.size(); i++) {
 				System.out.println(availableSites.get(i).toString());
 			}
 			
 			
+			System.out.print("\nWhich site should be reserved? ");
+			String customerSite = keyboard.nextLine();
+
 			
+			System.out.print("\nWhat name should the reservation be made under? ");
+			String customerName = keyboard.nextLine();		
+			
+			Reservation customerReservation = new Reservation();
+			customerReservation.setFrom_date(arrivalDate);
+			customerReservation.setTo_date(departureDate);
+			customerReservation.setName(customerName);
+			customerReservation.setSite_id(site_id);
 			
 		case CAMPGROUND_SUBMENU_OPTION_EXIT:
 			break;
 		}
 
 	}
-
+//
+//	private void reserveSite(ReservationDAO reservationDAO) {
+//		
+//		System.out.print("\nWhich site should be reserved? ");
+//		String customerSite = keyboard.nextLine();
+//
+//		
+//		System.out.print("\nWhat name should the reservation be made under? ");
+//		String customerName = keyboard.nextLine();
+//
+//	}
+	
 //	public void searchForReservations(int numOfOptions) {
 //		System.out.println("Which campground would you like to select? (enter 0 to cancel) ");
 //

@@ -19,20 +19,21 @@ public class JDBCSiteDAO implements SiteDAO {
 	public List<Site> getAvailableSites(int campgroundId, String arrivalDate, String departureDate) {
 		List<Site> sites = new ArrayList<>();
 
-		String sqlAvailableSites = 
-				"select *\n" + 
-				"from site\n" + 
-				"inner join\n" + 
-				"campground\n" + 
-				"on site.campground_id = campground.campground_id\n" + 
-				"where site.site_id not in (select site_id from reservation)\n" + 
-				"and site.campground_id = ?\n" + 
-				"and site.site_id not in ( select site_id from reservation where\n" + 
-				"reservation.from_date NOT between ? and ?\n" + 
-				"AND\n" + 
-				"reservation.to_date NOT between ? and ?) limit 5"; 
+		String sqlAvailableSites =
+				"select * " + 
+				"from site " + 
+				"inner join " + 
+				"campground " + 
+				"on site.campground_id = campground.campground_id " + 
+				"where site.site_id not in (select site_id from reservation) " + 
+				"and site.campground_id = ? " + 
+				"and site.site_id not in ( select site_id from reservation where " + 
+				"reservation.from_date NOT between date(?) and date(?) " + 
+				"AND " + 
+				"reservation.to_date NOT between date(?) and date(?)) limit 5 "; 
 
-		SqlRowSet results = myJdbcTemplate.queryForRowSet(sqlAvailableSites);
+		SqlRowSet results = myJdbcTemplate.queryForRowSet(sqlAvailableSites, campgroundId, arrivalDate, departureDate, arrivalDate, departureDate);
+		//
 
 		while (results.next()) {
 			Site theSite = mapRowToSite(results);

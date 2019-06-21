@@ -18,7 +18,12 @@ public class JDBCReservationDAO implements ReservationDAO {
 
 	@Override
 	public Reservation createReservation(Reservation newReservation) {
-		// TODO Auto-generated method stub
+
+
+		
+		
+		insert into reservation (site_id, name, from_date, to_date, create_date) values (4, 'theFakeFamily', '2019-06-15', '2019-06-20', current_date)
+		
 		return null;
 	}
 

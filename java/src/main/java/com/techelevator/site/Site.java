@@ -9,8 +9,6 @@ public class Site {
 	private boolean accessible;
 	private int max_rv_length;
 	private boolean utilities;
-
-	public
 	
 	public int getSite_id() {
 		return site_id;
@@ -66,6 +64,11 @@ public class Site {
 
 	public void setUtilities(boolean utilities) {
 		this.utilities = utilities;
+	}
+	
+	@Override
+	public String toString() {
+		return site_number + "\t" + max_occupancy + "\t" + accessible + "\t" + max_rv_length + "\t" + utilities;
 	}
 
 }
