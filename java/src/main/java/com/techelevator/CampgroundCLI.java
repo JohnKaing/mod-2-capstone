@@ -1,17 +1,13 @@
 package com.techelevator;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.techelevator.campground.JDBCCampgroundDAO;
 import com.techelevator.park.JDBCParkDAO;
 import com.techelevator.park.Park;
 import com.techelevator.park.ParkDAO;
-import com.techelevator.reservation.JDBCReservationDAO;
-import com.techelevator.site.JDBCSiteDAO;
 import com.techelevator.view.Menu;
 
 public class CampgroundCLI {
@@ -37,8 +33,8 @@ public class CampgroundCLI {
 	private static final String MAIN_MENU_OPTION_VIEW_CAMPGROUNDS = "View Campgrounds";
 	private static final String MAIN_MENU_OPTION_SEARCH = "Search For Reservation";
 	private static final String MAIN_MENU_OPTION_EXIT = "Quit";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_CAMPGROUNDS, MAIN_MENU_OPTION_SEARCH,
-			MAIN_MENU_OPTION_EXIT };
+	//private static String[] MAIN_MENU_OPTIONS;
+	//= { MAIN_MENU_OPTION_VIEW_CAMPGROUNDS, MAIN_MENU_OPTION_SEARCH, MAIN_MENU_OPTION_EXIT };
 
 	private Menu campgroundMenu; // Menu object to be used by an instance of this class
 
@@ -57,7 +53,19 @@ public class CampgroundCLI {
 
 			printHeading("Select a Park for further details");
 			List<Park> allParks = parkDAO.getAllParks();
-			listParks(allParks);
+			List<String> allParkNames = new ArrayList<String>();
+			
+			for(Park eachPark : allParks) {
+				allParkNames.add(eachPark.getName());
+			}
+			
+			String[] MAIN_MENU_OPTIONS = new String[allParkNames.size()];
+			
+			for(int i = 0; i < allParkNames.size(); i++) {
+				MAIN_MENU_OPTIONS[i] = allParkNames.get(i);
+			}
+					
+			//listParks(allParks);
 
 //			System.out.println(parkDAO.getAllParks());
 
