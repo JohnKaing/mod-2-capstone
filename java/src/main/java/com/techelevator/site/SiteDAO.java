@@ -11,5 +11,9 @@ public interface SiteDAO {
 	public void updateSite(Site updatedSite);
 
 	public boolean deleteSite(Site siteToDelete);
+	
+	public List<Site> getAvailableSites(int campgroundId, String arrivalDate, String departureDate);
+	
+	//int campgroundId, String arrivalDate, String departureDate
 
 }

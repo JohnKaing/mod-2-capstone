@@ -10,6 +10,8 @@ public class Site {
 	private int max_rv_length;
 	private boolean utilities;
 
+	public
+	
 	public int getSite_id() {
 		return site_id;
 	}

@@ -85,8 +85,7 @@ public class Campground {
 	 */
 	@Override
 	public String toString() {
-		return "Campground [campgroundId=" + campgroundId + ", parkId=" + parkId + ", name=" + name + ", openFromMm="
-				+ openFromMm + ", openToMm=" + openToMm + ", dailyFee=" + dailyFee + "]";
+		return "#" + campgroundId + "\t" + name + "\t" +  openFromMm + "\t" +  openToMm + "\t" + "$" + dailyFee;		// TODO fix formatting
 	}
 	
 	

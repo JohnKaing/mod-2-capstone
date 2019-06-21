@@ -42,6 +42,26 @@ public class Menu {
 		return choice;
 	}
 
+	public int getNumberChoice(int options) {
+		out.print("\nWhich site number? >>> ");
+		
+		String userInput = in.nextLine();
+		int intChoice = 0;
+		try {
+			int selectedOption = Integer.valueOf(userInput);
+			if (selectedOption > 0 && selectedOption <= options) {
+				intChoice = selectedOption;
+			}
+		} catch (NumberFormatException e) {
+			// eat the exception, an error message will be displayed below since choice will
+			// be null
+		}
+		if (userInput == null) {
+			out.println("\n*** " + userInput + " is not a valid option ***\n");
+		}
+		return intChoice;
+	}
+
 	public void displayMenuOptions(Object[] options) {
 		out.println();
 		for (int i = 0; i < options.length; i++) {
