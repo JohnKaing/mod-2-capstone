@@ -59,32 +59,45 @@ public class CampgroundCLI {
 				allParkNames.add(eachPark.getName());
 			}
 			
-			String[] MAIN_MENU_OPTIONS = new String[allParkNames.size()];
+			String[] MAIN_MENU_OPTIONS = new String[allParkNames.size() + 1];
 			
 			for(int i = 0; i < allParkNames.size(); i++) {
 				MAIN_MENU_OPTIONS[i] = allParkNames.get(i);
 			}
+			
+			MAIN_MENU_OPTIONS[MAIN_MENU_OPTIONS.length - 1] = "Quit";
 					
 			//listParks(allParks);
 
 //			System.out.println(parkDAO.getAllParks());
 
-			String choice = (String) campgroundMenu.getChoiceFromOptions(MAIN_MENU_OPTIONS); // Display menu and get
-																								// choice
-
-			switch (choice) { // Process based on user menu choice
-
-			case MAIN_MENU_OPTION_VIEW_CAMPGROUNDS:
-				viewCampgrounds();
-				break; // Exit switch statement
-
-			case MAIN_MENU_OPTION_SEARCH:
-				break; // Exit switch statement
-
-			case MAIN_MENU_OPTION_EXIT:
-				shouldProcess = false; // Set variable to end loop
-				break; // Exit switch statement
+			String choice = (String) campgroundMenu.getChoiceFromOptions(MAIN_MENU_OPTIONS); // Display menu and get choice
+			
+//			campgroundMenu.displayMenuOptions(MAIN_MENU_OPTIONS);
+			
+			for (int i = 0; i < MAIN_MENU_OPTIONS.length; i++) {
+				if (choice == "Quit") {
+					System.out.println("Thank you, goodbye!");
+					return;
+				}
+				if (choice == MAIN_MENU_OPTIONS[i]) {
+					System.out.println(parkDAO.getParkInfo(i + 1).toString());
+				}
 			}
+			
+//			switch (choice) { // Process based on user menu choice
+//
+//			case MAIN_MENU_OPTION_VIEW_CAMPGROUNDS:
+//				viewCampgrounds();
+//				break; // Exit switch statement
+//
+//			case MAIN_MENU_OPTION_SEARCH:
+//				break; // Exit switch statement
+//
+//			case MAIN_MENU_OPTION_EXIT:
+//				shouldProcess = false; // Set variable to end loop
+//				break; // Exit switch statement
+//			}
 		}
 		return; // End method and return to caller
 	}

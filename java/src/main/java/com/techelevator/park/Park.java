@@ -100,8 +100,7 @@ public class Park {
 	 */
 	@Override
 	public String toString() {
-		return "Park [parkId=" + parkId + ", name=" + name + ", location=" + location + ", establishDate="
-				+ establishDate + ", area=" + area + ", visitors=" + visitors + ", description=" + description + "]";
+		return name + " National Park" + "\nLocation: "+ location + "\nEstablished: " + establishDate + "\nArea: " + area + "\nAnnual Visitors: " + visitors + "\n" + description;
 	}
 	
 	
