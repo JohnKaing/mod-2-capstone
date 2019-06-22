@@ -143,7 +143,7 @@ public class CampgroundCLI {
 
 		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
 		HashMap<Integer, Double> campgroundIdFeeMap = new HashMap<Integer, Double>();
-		
+
 		for (int i = 0; i < campgroundsById.size(); i++) {
 			Campground current = campgroundsById.get(i);
 			System.out.println(current.toString());
@@ -171,64 +171,62 @@ public class CampgroundCLI {
 				// begin selecting available sites
 				System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
 				int userCampground = Integer.parseInt(keyboard.nextLine());
-				System.out.print("What is the arrival date? (YYYY-MM-DD): ");
-				Date arrivalDate = Date.valueOf(keyboard.nextLine());
-				System.out.print("What is the departure date? (YYYY-MM-DD): ");
-				Date departureDate = Date.valueOf(keyboard.nextLine());
 
-				double dailyFee = campgroundIdFeeMap.get(userCampground);
-				
-				//calculate days
-				
-				DecimalFormat ft = new DecimalFormat("####");
-				ft = new DecimalFormat("###,###.00"); 
-				
-				int daysdiff = 0;
-			    long diff = arrivalDate.getTime() - departureDate.getTime();
-			    long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
-			    daysdiff = (int) -(diffDays - 1);
-			    double totalCost = daysdiff * dailyFee;
-			    System.out.println(daysdiff + "  total days");
-			    System.out.println("$" + ft.format(dailyFee) + "  price per day");
-			    System.out.println("$" + ft.format(totalCost));
-			    
-				
-				System.out.println("\nResults Matching Your Search Criteria");
-				printHeading(
-						"Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
+				if (userCampground == 0) {
+					return;
+				} else if (campgroundIdFeeMap.containsKey(userCampground)) {
 
-				List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
+					System.out.print("What is the arrival date? (YYYY-MM-DD): ");
+					Date arrivalDate = Date.valueOf(keyboard.nextLine());
+					System.out.print("What is the departure date? (YYYY-MM-DD): ");
+					Date departureDate = Date.valueOf(keyboard.nextLine());
 
-				Site[] availableSiteArray = new Site[availableSites.size()];
+					double dailyFee = campgroundIdFeeMap.get(userCampground);
 
-				for (int i = 0; i < availableSites.size(); i++) {
-					availableSiteArray[i] = availableSites.get(i);
+					// calculate days
+
+					DecimalFormat ft = new DecimalFormat("####");
+					ft = new DecimalFormat("###,###.00");
+
+					int daysdiff = 0;
+					long diff = arrivalDate.getTime() - departureDate.getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
+					daysdiff = (int) -(diffDays - 1);
+					double totalCost = daysdiff * dailyFee;
+					System.out.println("\n" + daysdiff + "  total days");
+					System.out.println("$" + ft.format(dailyFee) + "  price per day");
+					System.out.println("$" + ft.format(totalCost) + "  total cost");
+
+					System.out.println("\nResults Matching Your Search Criteria");
+					printHeading("Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities?"); //
+
+					List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
+
+					Site[] availableSiteArray = new Site[availableSites.size()];
+
+					for (int i = 0; i < availableSites.size(); i++) {
+						availableSiteArray[i] = availableSites.get(i);
+					}
+
+					Site chosenSite = (Site) campgroundMenu.getChoiceFromOptions(availableSiteArray); // Display menu & get choice
+																										
+					int chosenSiteId = chosenSite.getSite_id();
+
+					// end available sites
+					// --------
+					// --------
+					// --------
+					
+					makeReservation(chosenSiteId, arrivalDate, departureDate);
+					
+				} else {
+					System.out.println("Sorry, that isn't a valid campground. Please try again!");
 				}
-
-				Site chosenSite = (Site) campgroundMenu.getChoiceFromOptions(availableSiteArray); // Display menu
-																									// and get
-
-				int chosenSiteId = chosenSite.getSite_id();
-
-				// end available sites
-				// --------
-				// --------
-				// --------
-				// begin reservation
-
-				System.out.print("\nWhat name should the reservation be made under? ");
-				String customerName = keyboard.nextLine();
-
-				Reservation customerRes = new Reservation(chosenSiteId, customerName, arrivalDate, departureDate);
-
-				int customerResId = reservationDAO.createReservation(customerRes);
-				System.out.println("\nThanks! Your reservation number is " + customerResId + ". Enjoy your visit!");
 
 			} catch (Exception e) {
 				System.out.println("Sorry, there seems to have been an error. Please try again!");
 			}
 
-			// end reservation
 
 		case CAMPGROUND_SUBMENU_OPTION_EXIT:
 			break;
@@ -236,6 +234,16 @@ public class CampgroundCLI {
 
 	}
 
+	private void makeReservation (int chosenSiteId, Date arrivalDate, Date departureDate) {
+		System.out.print("\nWhat name should the reservation be made under? ");
+		String customerName = keyboard.nextLine();
+
+		Reservation customerRes = new Reservation(chosenSiteId, customerName, arrivalDate, departureDate);
+
+		int customerResId = reservationDAO.createReservation(customerRes);
+		System.out.println("\nThanks! Your reservation number is " + customerResId + ". Enjoy your visit!");	
+	}
+	
 //	private List<Site> selectAvailableSites() {
 //		System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
 //		int userCampground = Integer.parseInt(keyboard.nextLine());
