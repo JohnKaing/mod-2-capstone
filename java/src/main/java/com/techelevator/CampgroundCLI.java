@@ -35,18 +35,15 @@ public class CampgroundCLI {
 	private static final String[] CAMPGROUND_MENU_OPTIONS = { CAMPGROUND_MENU_OPTION_VIEW_CAMPGROUNDS,
 			CAMPGROUND_MENU_OPTION_EXIT };
 
-	private static final String CAMPGROUND_SUBMENU_OPTION_SEARCH = "Search For Reservation";
+	private static final String CAMPGROUND_SUBMENU_OPTION_SEARCH = "Search For Reservation Availability";
 	private static final String CAMPGROUND_SUBMENU_OPTION_EXIT = "Return to Main Menu";
 	private static final String[] CAMPGROUND_SUBMENU_OPTIONS = { CAMPGROUND_SUBMENU_OPTION_SEARCH,
 			CAMPGROUND_SUBMENU_OPTION_EXIT };
 
-	// = { MAIN_MENU_OPTION_VIEW_CAMPGROUNDS, MAIN_MENU_OPTION_SEARCH,
-	// MAIN_MENU_OPTION_EXIT };
-
-	private Menu campgroundMenu; // Menu object to be used by an instance of this class
+	private Menu menu; // Menu object to be used by an instance of this class
 
 	public CampgroundCLI(Menu Menu) { // Constructor - user will pas a menu for this class to use
-		this.campgroundMenu = Menu; // Make the Menu the user object passed, our Menu
+		this.menu = Menu; // Make the Menu the user object passed, our Menu
 	}
 
 	public static void main(String[] args) {
@@ -64,72 +61,66 @@ public class CampgroundCLI {
 
 	public void run() {
 		boolean shouldProcess = true; // Loop control variable
-
 		while (shouldProcess) { // Loop until user indicates they want to exit
 
-			printHeading("Select a Park for further details");
-			List<Park> allParks = parkDAO.getAllParks();
-			List<String> allParkNames = new ArrayList<String>();
-
-			for (Park eachPark : allParks) {
-				allParkNames.add(eachPark.getName());
-			}
-
-			String[] menuParkNames = new String[allParkNames.size() + 1];
-
-			for (int i = 0; i < allParkNames.size(); i++) {
-				menuParkNames[i] = allParkNames.get(i);
-			}
-
-			menuParkNames[menuParkNames.length - 1] = "Quit";
-
-			String choice = (String) campgroundMenu.getChoiceFromOptions(menuParkNames); // Display menu and get
-																							// choice
-
-//			campgroundMenu.displayMenuOptions(MAIN_MENU_OPTIONS);
-
-			for (int i = 0; i < menuParkNames.length; i++) {
-				if (choice == "Quit") {
-					System.out.println("Thank you, goodbye!");
-					return;
-				}
-				if (choice == menuParkNames[i]) {
-					System.out.println();
-					System.out.println(parkDAO.getParkInfo(i + 1).toString());
-
-					printHeading("Select a Command");
-					String campChoice = (String) campgroundMenu.getChoiceFromOptions(CAMPGROUND_MENU_OPTIONS);
-
-					switch (campChoice) {
-
-					case CAMPGROUND_MENU_OPTION_VIEW_CAMPGROUNDS:
-						viewCampgrounds(i + 1);
-						break;
-
-					case CAMPGROUND_MENU_OPTION_EXIT:
-						break;
-					}
-				}
-			}
+			mainParkMenu();
 		}
 		return; // End method and return to caller
 	}
 
-	public void viewCampgrounds(int parkID) {
-		printHeading("\t Name \t\tOpen \tClose \tDaily Fee                   "); // TODO fix formatting
+	private void mainParkMenu() {
+		printHeading("Select a Park for further details");
+		List<Park> allParks = parkDAO.getAllParks();
+		List<String> allParkNames = new ArrayList<String>();
 
-		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
-		HashMap<Integer, Double> campgroundIdFeeMap = new HashMap<Integer, Double>();
-
-		for (int i = 0; i < campgroundsById.size(); i++) {
-			Campground current = campgroundsById.get(i);
-			System.out.println(current.toString());
-			campgroundIdFeeMap.put(current.getCampgroundId(), current.getDailyFee());
+		for (Park eachPark : allParks) {
+			allParkNames.add(eachPark.getName());
 		}
 
-		String campSubChoice = (String) campgroundMenu.getChoiceFromOptions(CAMPGROUND_SUBMENU_OPTIONS);
+		String[] menuParkNames = new String[allParkNames.size() + 1];
 
-		switch (campSubChoice) {
+		for (int i = 0; i < allParkNames.size(); i++) {
+			menuParkNames[i] = allParkNames.get(i);
+		}
+
+		menuParkNames[menuParkNames.length - 1] = "Quit";
+
+		String choice = (String) menu.getChoiceFromOptions(menuParkNames); // Display menu and get
+																			// choice
+
+		for (int i = 0; i < menuParkNames.length; i++) {
+			if (choice == "Quit") {
+				System.out.println("Thank you, goodbye!");
+				return;
+			}
+			if (choice == menuParkNames[i]) {
+				System.out.println();
+				System.out.println(parkDAO.getParkInfo(i + 1).toString());
+
+				printHeading("Select a Command");
+				String campChoice = (String) menu.getChoiceFromOptions(CAMPGROUND_MENU_OPTIONS);
+
+				switch (campChoice) {
+
+				case CAMPGROUND_MENU_OPTION_VIEW_CAMPGROUNDS:
+					viewCampgrounds(i + 1);
+					break;
+
+				case CAMPGROUND_MENU_OPTION_EXIT:
+					break;
+				}
+			}
+		}
+	}
+
+	public void viewCampgrounds(int parkID) {
+		printHeading("#\t Name \t\tOpen \tClose \tDaily Fee                   "); // TODO fix formatting
+
+		HashMap<Integer, Double> campgroundIdFeeMap = handleCampgroundsAndFees(parkID);
+
+		String choice = (String) menu.getChoiceFromOptions(CAMPGROUND_SUBMENU_OPTIONS);
+
+		switch (choice) {
 
 		case CAMPGROUND_SUBMENU_OPTION_SEARCH:
 			try {
@@ -146,26 +137,40 @@ public class CampgroundCLI {
 					System.out.print("What is the departure date? (YYYY-MM-DD): ");
 					Date departureDate = Date.valueOf(keyboard.nextLine());
 
-					double dailyFee = campgroundIdFeeMap.get(userCampground);
-
-					calculateDays(dailyFee, arrivalDate, departureDate); 					// calculate/print # of days and cost
-				
-					int chosenSiteId = handleAvailableSites									// get available sites, return chosen site ID
-							(userCampground, arrivalDate, departureDate); 
-
-					makeReservation(chosenSiteId, arrivalDate, departureDate);
+					if (departureDate.compareTo(arrivalDate) >= 0) {
+						double dailyFee = campgroundIdFeeMap.get(userCampground);
+						calculateDays(dailyFee, arrivalDate, departureDate); // calculate/print # of days and cost
+						int chosenSiteId = handleAvailableSites // get available sites, return chosen site ID
+						(userCampground, arrivalDate, departureDate);
+						makeReservation(chosenSiteId, arrivalDate, departureDate);
+					} else {
+						System.out.println("\nSorry, it seems you are attempting time travel."
+								+ " Please try again with valid dates!");
+					}
 
 				} else {
 					System.out.println("Sorry, that isn't a valid campground. Please try again!");
 				}
 
 			} catch (Exception e) {
-				System.out.println("Sorry, there seems to have been an error. Please try again!");
+				System.out.println("\nSorry, there seems to have been an error. Please try again!");
 			}
 
 		case CAMPGROUND_SUBMENU_OPTION_EXIT:
 			break;
 		}
+	}
+
+	private HashMap<Integer, Double> handleCampgroundsAndFees(int parkID) {
+		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
+		HashMap<Integer, Double> campgroundIdFeeMap = new HashMap<Integer, Double>();
+
+		for (int i = 0; i < campgroundsById.size(); i++) {
+			Campground current = campgroundsById.get(i);
+			System.out.println(current.toString());
+			campgroundIdFeeMap.put(current.getCampgroundId(), current.getDailyFee());
+		}
+		return campgroundIdFeeMap;
 	}
 
 	private void calculateDays(double dailyFee, Date arrivalDate, Date departureDate) {
@@ -177,6 +182,7 @@ public class CampgroundCLI {
 		long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
 		daysdiff = (int) -(diffDays - 1);
 		double totalCost = daysdiff * dailyFee;
+
 		System.out.println("\n" + daysdiff + "  total days");
 		System.out.println("$" + ft.format(dailyFee) + "  price per day");
 		System.out.println("$" + ft.format(totalCost) + "  total cost");
@@ -194,7 +200,7 @@ public class CampgroundCLI {
 			availableSiteArray[i] = availableSites.get(i);
 		}
 
-		Site chosenSite = (Site) campgroundMenu.getChoiceFromOptions(availableSiteArray); // Display menu & get choice
+		Site chosenSite = (Site) menu.getChoiceFromOptions(availableSiteArray); // Display menu & get choice
 
 		return chosenSite.getSite_id();
 	}
