@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,12 +179,18 @@ public class CampgroundCLI {
 				double dailyFee = campgroundIdFeeMap.get(userCampground);
 				
 				//calculate days
+				
+				DecimalFormat ft = new DecimalFormat("####");
+				ft = new DecimalFormat("###,###.00"); 
+				
 				int daysdiff = 0;
 			    long diff = arrivalDate.getTime() - departureDate.getTime();
 			    long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
-			    daysdiff = (int) diffDays;
-			    System.out.println(-(daysdiff - 1));
-			    System.out.println(userCampground);
+			    daysdiff = (int) -(diffDays - 1);
+			    double totalCost = daysdiff * dailyFee;
+			    System.out.println(daysdiff + "  total days");
+			    System.out.println("$" + ft.format(dailyFee) + "  price per day");
+			    System.out.println("$" + ft.format(totalCost));
 			    
 				
 				System.out.println("\nResults Matching Your Search Criteria");
