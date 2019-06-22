@@ -177,6 +177,15 @@ public class CampgroundCLI {
 
 				double dailyFee = campgroundIdFeeMap.get(userCampground);
 				
+				//calculate days
+				int daysdiff = 0;
+			    long diff = arrivalDate.getTime() - departureDate.getTime();
+			    long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
+			    daysdiff = (int) diffDays;
+			    System.out.println(-(daysdiff - 1));
+			    System.out.println(userCampground);
+			    
+				
 				System.out.println("\nResults Matching Your Search Criteria");
 				printHeading(
 						"Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
