@@ -3,7 +3,10 @@ package com.techelevator.view;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Scanner;
+
+import com.techelevator.site.Site;
 
 public class Menu {
 
@@ -42,9 +45,32 @@ public class Menu {
 		return choice;
 	}
 
+	public int getSiteChoice(List<Site> availableSites) {
+		System.out.print("\nWhich site number should be reserved? ");
+		Object choice = null;
+		String userInput = in.nextLine();
+		try {
+			int selectedOption = Integer.valueOf(userInput);
+//			if (selectedOption > 0) {
+				for (Site each : availableSites) {
+					if (selectedOption == each.getSite_number()) {
+						choice = selectedOption;
+					}
+				}
+//			}
+		} catch (Exception e) {
+			// eat the exception, an error message will be displayed below since choice will
+			// be null
+		}
+		if (choice == null) {
+			out.println("\n*** " + userInput + " is not a valid option ***\n");
+		}
+		return (int) choice;
+	}
+
 	public int getNumberChoice(int options) {
 		out.print("\nWhich site number? >>> ");
-		
+
 		String userInput = in.nextLine();
 		int intChoice = 0;
 		try {

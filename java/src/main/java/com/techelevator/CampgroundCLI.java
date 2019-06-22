@@ -158,40 +158,53 @@ public class CampgroundCLI {
 		switch (campSubChoice) {
 
 		case CAMPGROUND_SUBMENU_OPTION_SEARCH:
+			try {
 //			String campResChoice2 = (String) campgroundMenu.getChoiceFromOptions(campgroundStrings);
 //			System.out.println(campResChoice2);
 
-			// begin selecting available sites
-			System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
-			int userCampground = Integer.parseInt(keyboard.nextLine());
-			System.out.print("What is the arrival date? (YYYY-MM-DD): ");
-			Date arrivalDate = Date.valueOf(keyboard.nextLine());
-			System.out.print("What is the departure date? (YYYY-MM-DD): ");
-			Date departureDate = Date.valueOf(keyboard.nextLine());
+				// begin selecting available sites
+				System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
+				int userCampground = Integer.parseInt(keyboard.nextLine());
+				System.out.print("What is the arrival date? (YYYY-MM-DD): ");
+				Date arrivalDate = Date.valueOf(keyboard.nextLine());
+				System.out.print("What is the departure date? (YYYY-MM-DD): ");
+				Date departureDate = Date.valueOf(keyboard.nextLine());
 
-			System.out.println("\nResults Matching Your Search Criteria");
-			printHeading("Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
+				System.out.println("\nResults Matching Your Search Criteria");
+				printHeading(
+						"Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
 
-			List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
-			
-//			List<Site> availableSites = selectAvailableSites();
+				List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
 
-			for (int i = 0; i < availableSites.size(); i++) {
-				System.out.println(availableSites.get(i).toString());
+				Site[] availableSiteArray = new Site[availableSites.size()];
+
+				for (int i = 0; i < availableSites.size(); i++) {
+					availableSiteArray[i] = availableSites.get(i);
+				}
+
+				Site chosenSite = (Site) campgroundMenu.getChoiceFromOptions(availableSiteArray); // Display menu
+																									// and get
+
+				int chosenSiteId = chosenSite.getSite_id();
+
+				// end available sites
+				// --------
+				// --------
+				// --------
+				// begin reservation
+
+				System.out.print("\nWhat name should the reservation be made under? ");
+				String customerName = keyboard.nextLine();
+
+				Reservation customerRes = new Reservation(chosenSiteId, customerName, arrivalDate, departureDate);
+
+				int customerResId = reservationDAO.createReservation(customerRes);
+				System.out.println("\nThanks! Your reservation number is " + customerResId + ". Enjoy your visit!");
+
+			} catch (Exception e) {
+				System.out.println("Sorry, there seems to have been an error. Please try again!");
 			}
-			// end available sites
 
-			// begin reservation
-			System.out.print("\nWhich site number should be reserved? ");
-			int customerSite = Integer.parseInt(keyboard.nextLine());
-
-			System.out.print("\nWhat name should the reservation be made under? ");
-			String customerName = keyboard.nextLine();
-
-			Reservation customerRes = new Reservation(customerSite, customerName, arrivalDate, departureDate);
-
-			int customerResId = reservationDAO.createReservation(customerRes);
-			System.out.println("\nThanks! Your reservation number is " + customerResId + ". Enjoy your visit!");
 			// end reservation
 
 		case CAMPGROUND_SUBMENU_OPTION_EXIT:
@@ -200,19 +213,19 @@ public class CampgroundCLI {
 
 	}
 
-	private List<Site> selectAvailableSites() {
-		System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
-		int userCampground = Integer.parseInt(keyboard.nextLine());
-		System.out.print("What is the arrival date? (YYYY-MM-DD): ");
-		Date arrivalDate = Date.valueOf(keyboard.nextLine());
-		System.out.print("What is the departure date? (YYYY-MM-DD): ");
-		Date departureDate = Date.valueOf(keyboard.nextLine());
-
-		System.out.println("\nResults Matching Your Search Criteria");
-		printHeading("Site No. \t Max Occup. \t Accessible? \t Max RV Length \t Utilities? \t Cost"); //
-
-		return siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
-	}
+//	private List<Site> selectAvailableSites() {
+//		System.out.print("Which campground would you like to select? (enter 0 to cancel) ");
+//		int userCampground = Integer.parseInt(keyboard.nextLine());
+//		System.out.print("What is the arrival date? (YYYY-MM-DD): ");
+//		Date arrivalDate = Date.valueOf(keyboard.nextLine());
+//		System.out.print("What is the departure date? (YYYY-MM-DD): ");
+//		Date departureDate = Date.valueOf(keyboard.nextLine());
+//
+//		System.out.println("\nResults Matching Your Search Criteria");
+//		printHeading("Site No. \t Max Occup. \t Accessible? \t Max RV Length \t Utilities? \t Cost"); //
+//
+//		return siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
+//	}
 
 	private void printHeading(String headingText) {
 		System.out.println("\n" + headingText);
