@@ -1,5 +1,6 @@
 package com.techelevator.park;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Park {
@@ -100,10 +101,16 @@ public class Park {
 	 */
 	@Override
 	public String toString() {
-		return name + " National Park" + "\nLocation: "+ location + "\nEstablished: " + establishDate + "\nArea: " + area + "\nAnnual Visitors: " + visitors + "\n" + description;
+		DecimalFormat ft = new DecimalFormat("####");
+		ft = new DecimalFormat("###,###,###"); 
+		return  name + " National Park" + "\nLocation: \t " + location + "\nEstablished: \t " + establishDate + "\nArea: \t\t " + ft.format(area) + " sq km" + "\nAnnual Visitors: " + ft.format(visitors) + "\n\n" + description;
 	}
 	
+//	%-15s %15s
+  
+} 
+
 	
-}
+
 
 

@@ -137,7 +137,7 @@ public class CampgroundCLI {
 	}
 
 	public void viewCampgrounds(int parkID) {
-		printHeading("\t Name \t\t Open \t Close \t Daily Fee "); // TODO fix formatting
+		printHeading("\t Name \t\tOpen \tClose \tDaily Fee                   "); // TODO fix formatting
 
 		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
 		for (int i = 0; i < campgroundsById.size(); i++) {
@@ -170,7 +170,7 @@ public class CampgroundCLI {
 			Date departureDate = Date.valueOf(keyboard.nextLine());
 
 			System.out.println("\nResults Matching Your Search Criteria");
-			printHeading("Site No. \t Max Occup. \t Accessible? \t Max RV Length \t Utilities? \t Cost"); //
+			printHeading("Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
 
 			List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
 			

@@ -1,5 +1,7 @@
 package com.techelevator.campground;
 
+import java.text.DecimalFormat;
+
 public class Campground {
 
 	private int    campgroundId;
@@ -85,7 +87,9 @@ public class Campground {
 	 */
 	@Override
 	public String toString() {
-		return "#" + campgroundId + "\t" + name + "\t" +  openFromMm + "\t" +  openToMm + "\t" + "$" + dailyFee;		// TODO fix formatting
+		DecimalFormat ft = new DecimalFormat("####");
+		ft = new DecimalFormat("###,###.00"); 
+		return "#" + campgroundId + "\t" + name + " \t" +  openFromMm + "\t" +  openToMm + "\t" + "$" + ft.format(dailyFee);		// TODO fix formatting
 	}
 	
 	

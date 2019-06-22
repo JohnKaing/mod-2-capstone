@@ -68,7 +68,7 @@ public class Site {
 	
 	@Override
 	public String toString() {
-		return site_number + "\t" + max_occupancy + "\t" + accessible + "\t" + max_rv_length + "\t" + utilities;
+		return site_number + "\t\t" + max_occupancy + "\t\t" + accessible + "\t\t " + max_rv_length + "\t\t   " + utilities;
 	}
 
 }
