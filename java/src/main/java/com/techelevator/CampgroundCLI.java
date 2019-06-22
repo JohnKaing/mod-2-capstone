@@ -2,6 +2,7 @@ package com.techelevator;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -140,8 +141,12 @@ public class CampgroundCLI {
 		printHeading("\t Name \t\tOpen \tClose \tDaily Fee                   "); // TODO fix formatting
 
 		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
+		HashMap<Integer, Double> campgroundIdFeeMap = new HashMap<Integer, Double>();
+		
 		for (int i = 0; i < campgroundsById.size(); i++) {
-			System.out.println(campgroundsById.get(i).toString());
+			Campground current = campgroundsById.get(i);
+			System.out.println(current.toString());
+			campgroundIdFeeMap.put(current.getCampgroundId(), current.getDailyFee());
 		}
 
 //		String[] campgroundStrings = new String[campgroundsById.size()];
@@ -170,6 +175,8 @@ public class CampgroundCLI {
 				System.out.print("What is the departure date? (YYYY-MM-DD): ");
 				Date departureDate = Date.valueOf(keyboard.nextLine());
 
+				double dailyFee = campgroundIdFeeMap.get(userCampground);
+				
 				System.out.println("\nResults Matching Your Search Criteria");
 				printHeading(
 						"Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities? \t Cost                   "); //
