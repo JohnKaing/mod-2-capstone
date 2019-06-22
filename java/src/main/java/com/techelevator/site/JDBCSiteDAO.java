@@ -1,5 +1,6 @@
 package com.techelevator.site;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class JDBCSiteDAO implements SiteDAO {
 		this.myJdbcTemplate = new JdbcTemplate(aDataSource); // instantiate and initialize JdbcTemplate with datasource
 	}
 
-	public List<Site> getAvailableSites(int campgroundId, String arrivalDate, String departureDate) {
+	public List<Site> getAvailableSites(int campgroundId, Date arrivalDate, Date departureDate) {
 		List<Site> sites = new ArrayList<>();
 
 		String sqlAvailableSites =
@@ -28,9 +29,9 @@ public class JDBCSiteDAO implements SiteDAO {
 				"where site.site_id not in (select site_id from reservation) " + 
 				"and site.campground_id = ? " + 
 				"and site.site_id not in ( select site_id from reservation where " + 
-				"reservation.from_date NOT between date(?) and date(?) " + 
+				"reservation.from_date NOT between ? and ? " + 
 				"AND " + 
-				"reservation.to_date NOT between date(?) and date(?)) limit 5 "; 
+				"reservation.to_date NOT between ? and ?) limit 5 "; 
 
 		SqlRowSet results = myJdbcTemplate.queryForRowSet(sqlAvailableSites, campgroundId, arrivalDate, departureDate, arrivalDate, departureDate);
 		//

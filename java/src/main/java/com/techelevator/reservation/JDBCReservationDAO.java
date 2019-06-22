@@ -17,14 +17,23 @@ public class JDBCReservationDAO implements ReservationDAO {
 	}
 
 	@Override
-	public Reservation createReservation(Reservation newReservation) {
+	public int createReservation(Reservation newReservation) {
+		int reservationId = 1234;
+		
+		String sqlInsertRes =
+			"insert into reservation (site_id, name, from_date, to_date, create_date) values "
+			+ "(?, ?, ?, ?, current_date)";
+		
+		myJdbcTemplate.update(sqlInsertRes, newReservation.getSite_id(), newReservation.getName(), newReservation.getFrom_date(), newReservation.getTo_date());
+		
+		SqlRowSet results = myJdbcTemplate.queryForRowSet("SELECT MAX(reservation_id) FROM reservation");
+		
+		while(results.next()) {
+			reservationId = results.getInt(1);
 
-
+		}
 		
-		
-		insert into reservation (site_id, name, from_date, to_date, create_date) values (4, 'theFakeFamily', '2019-06-15', '2019-06-20', current_date)
-		
-		return null;
+		return reservationId;
 	}
 
 	@Override
