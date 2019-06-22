@@ -137,7 +137,7 @@ public class CampgroundCLI {
 	}
 
 	public void viewCampgrounds(int parkID) {
-		System.out.println("\t Name \t\t Open \t Close \t Daily Fee "); // TODO fix formatting
+		printHeading("\t Name \t\t Open \t Close \t Daily Fee "); // TODO fix formatting
 
 		List<Campground> campgroundsById = campgroundDAO.getCampgroundByParkId(parkID);
 		for (int i = 0; i < campgroundsById.size(); i++) {
