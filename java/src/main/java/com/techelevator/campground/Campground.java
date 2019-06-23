@@ -1,5 +1,6 @@
 package com.techelevator.campground;
 
+import java.io.PrintStream;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 
@@ -95,10 +96,10 @@ public class Campground {
 	public String toString() {
 		DecimalFormat ft = new DecimalFormat("####");
 		ft = new DecimalFormat("###,###.00"); 
-		
-		return "#" + campgroundId + "\t" + name + " \t" +  getMonth(openFromMm) + "\t" +  getMonth(openToMm) + "\t" + "$" + ft.format(dailyFee);		// TODO fix formatting
+		 String test1 = "";
+		PrintStream test = System.out.printf("#%-2s %-35s %-10s %-10s $%-10s", campgroundId, name, getMonth(openFromMm), getMonth(openToMm), ft.format(dailyFee));		// TODO fix formatting
+		return test1 ;
 	}
-	
 	
 	
 	

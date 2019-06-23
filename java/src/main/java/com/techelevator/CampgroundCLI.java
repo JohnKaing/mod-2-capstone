@@ -114,8 +114,7 @@ public class CampgroundCLI {
 	}
 
 	public void viewCampgrounds(int parkID) {
-		printHeading("#\t Name \t\tOpen \tClose \tDaily Fee                   "); // TODO fix formatting
-
+		printHeading("    Name \t\t\t\tOpen       Close      Daily Fee                           "); // TODO fix formatting
 		HashMap<Integer, Double> campgroundIdFeeMap = handleCampgroundsAndFees(parkID);
 
 		String choice = (String) menu.getChoiceFromOptions(CAMPGROUND_SUBMENU_OPTIONS);
@@ -183,15 +182,14 @@ public class CampgroundCLI {
 		daysdiff = (int) -(diffDays - 1);
 		double totalCost = daysdiff * dailyFee;
 
-		System.out.println("\n" + daysdiff + "  total days");
-		System.out.println("$" + ft.format(dailyFee) + "  price per day");
-		System.out.println("$" + ft.format(totalCost) + "  total cost");
+		System.out.println("\ntotal days\t" + daysdiff);
+		System.out.println("price per day\t$" + ft.format(dailyFee));
+		System.out.println("total cost\t$" + ft.format(totalCost));
 	}
 
 	private int handleAvailableSites(int userCampground, Date arrivalDate, Date departureDate) {
 		System.out.println("\nResults Matching Your Search Criteria");
-		printHeading("Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities?"); //
-
+		printHeading("Site No.\tMax Occup.\tAccessible? \t Max RV Length \t Utilities?               "); //
 		List<Site> availableSites = siteDAO.getAvailableSites(userCampground, arrivalDate, departureDate);
 
 		Site[] availableSiteArray = new Site[availableSites.size()];
